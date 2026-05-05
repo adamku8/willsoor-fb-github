@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<base target="_top">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Willsoor FB — schvalování · EXPANDO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --orange: #ff4d00;
+  --orange-2: #ff7133;
+  --orange-soft: #ffede5;
+  --orange-tint: #ffdbcc;
+  --fg: #191919;
+  --fg-2: #4d4d4d;
+  --fg-3: #666666;
+  --fg-mut: #808080;
+  --br-1: #b3b3b3;
+  --br-2: #cccccc;
+  --br-3: #e6e6e6;
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --red: #b21f1f;
+  --red-bg: #fdecec;
+  --pl-bg: #e6e9ff; --pl-fg: #3a3da8;
+  --product-bg: #e6f4ec; --product-fg: #1d6635;
+  --ai-bg: #ffede5; --ai-fg: #c43c00;
+  --carousel-bg: #fff5f0; --carousel-fg: #cc4400;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg-soft); color: var(--fg); font-size: 14px; line-height: 1.5; padding-bottom: env(safe-area-inset-bottom); }
+.app { max-width: 820px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+.brand-bar { display: flex; align-items: baseline; gap: 12px; padding-bottom: .5rem; border-bottom: 1px solid var(--br-3); margin-bottom: 1.25rem; }
+.brand-mark { font-weight: 700; letter-spacing: 0.02em; color: var(--orange); font-size: 14px; }
+.brand-tag { color: var(--fg-mut); font-size: 12px; }
+h1 { font-size: 22px; font-weight: 700; margin: 0 0 .15rem; letter-spacing: -0.01em; }
+h2 { font-size: 16px; font-weight: 700; margin: 1.75rem 0 .75rem; color: var(--fg-2); letter-spacing: -0.005em; }
+.sub { color: var(--fg-3); font-size: 13px; margin: 0 0 1.5rem; }
+.bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.stat { background: var(--bg); border: 1px solid var(--br-3); border-radius: 6px; padding: 7px 12px; font-size: 12px; color: var(--fg-3); }
+.stat b { font-weight: 700; color: var(--fg); }
+.filters { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 1.25rem; padding: 8px 0; }
+.filters .group-label { font-size: 11px; color: var(--fg-mut); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+.filters .filter-btn { background: var(--bg); border: 1px solid var(--br-2); border-radius: 18px; padding: 6px 12px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--fg-2); transition: all 0.15s; }
+.filters .filter-btn:hover { background: var(--br-3); }
+.filters .filter-btn.active { background: var(--fg); color: white; border-color: var(--fg); }
+.filters .filter-btn.active.type-pl { background: var(--pl-fg); border-color: var(--pl-fg); }
+.filters .filter-btn.active.type-product { background: var(--product-fg); border-color: var(--product-fg); }
+.filters .filter-btn.active.type-ai { background: var(--ai-fg); border-color: var(--ai-fg); }
+.filters .filter-btn.active.type-carousel { background: var(--carousel-fg); border-color: var(--carousel-fg); }
+.filters .divider { width: 1px; height: 18px; background: var(--br-3); margin: 0 6px; }
+.btn { background: var(--bg); border: 1px solid var(--br-2); border-radius: 6px; padding: 9px 16px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--fg); transition: all 0.15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.btn:hover { background: var(--br-3); border-color: var(--br-1); }
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--orange); color: white; border-color: var(--orange); font-weight: 700; }
+.btn-primary:hover { background: var(--orange-2); border-color: var(--orange-2); }
+.btn-danger { color: var(--red); border-color: var(--br-2); }
+.btn-danger:hover { background: var(--red-bg); border-color: var(--red); }
+.card { background: var(--bg); border: 1px solid var(--br-3); border-radius: 8px; padding: 1rem 1.25rem 1.1rem; margin-bottom: 1rem; }
+.card.done { opacity: 0.6; }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: .85rem; flex-wrap: wrap; }
+.card-head-left { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.body-right { display: flex; flex-direction: column; gap: 10px; }
+.banner-row { display: flex; }
+.pill { background: var(--br-3); color: var(--fg-2); font-size: 11px; padding: 3px 10px; border-radius: 4px; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap; }
+.pill.date { background: var(--orange-soft); color: var(--orange); font-weight: 700; }
+.pill.priority { background: var(--orange-tint); color: #99290a; font-weight: 700; }
+.pill.tmpl { background: var(--br-3); color: var(--fg-2); }
+.pill.status-approved { background: var(--product-bg); color: var(--product-fg); }
+.pill.status-rejected { background: var(--red-bg); color: var(--red); }
+.pill.status-pending { background: var(--bg-soft); color: var(--fg-3); border: 1px solid var(--br-3); }
+
+.source-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; white-space: nowrap; }
+.source-badge.pl { background: var(--pl-bg); color: var(--pl-fg); }
+.source-badge.product { background: var(--product-bg); color: var(--product-fg); }
+.source-badge.ai { background: var(--ai-bg); color: var(--ai-fg); }
+.source-badge.carousel { background: var(--carousel-bg); color: var(--carousel-fg); }
+
+.body-grid { display: grid; grid-template-columns: 220px 1fr; gap: 16px; align-items: start; }
+.photo-stack { display: flex; flex-direction: column; gap: 6px; }
+.photo-stack .thumb { display: block; width: 100%; border-radius: 6px; border: 1px solid var(--br-3); background: var(--bg-soft); }
+.photo-stack .extras { display: flex; gap: 4px; flex-wrap: wrap; }
+.photo-stack .extras img { width: 70px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid var(--br-3); cursor: pointer; transition: transform .15s; }
+.photo-stack .extras img:hover { transform: scale(1.05); border-color: var(--orange); }
+.photo-stack .photo-count { font-size: 10px; color: var(--fg-mut); text-align: center; }
+
+.copy { background: var(--bg-soft); border-left: 3px solid var(--orange); border-radius: 0 6px 6px 0; padding: 14px 16px; font-size: 14px; line-height: 1.6; word-break: break-word; color: var(--fg); }
+.copy p { margin: 0 0 .65rem; }
+.copy p:last-child { margin-bottom: 0; }
+
+.meta-block { font-size: 12px; color: var(--fg-3); margin: 1rem 0 0; line-height: 1.7; padding-top: .65rem; border-top: 1px dashed var(--br-3); }
+.meta-block .meta-line { display: flex; gap: 6px; align-items: baseline; }
+.meta-block .meta-line .ico { width: 16px; flex-shrink: 0; text-align: center; }
+.meta-block a { color: var(--orange); text-decoration: none; font-weight: 500; word-break: break-all; }
+.meta-block a:hover { text-decoration: underline; }
+.meta-block code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; background: var(--bg-soft); padding: 1px 5px; border-radius: 3px; }
+
+.actions { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; align-items: center; }
+.actions select { font-family: inherit; font-size: 13px; padding: 7px 10px; border: 1px solid var(--br-2); border-radius: 6px; background: var(--bg); min-height: 38px; color: var(--fg); }
+.edit { display: none; margin-top: .85rem; }
+.edit.on { display: block; }
+.edit textarea { width: 100%; min-height: 120px; font-family: inherit; font-size: 14px; line-height: 1.55; padding: 12px 14px; border: 1px solid var(--br-2); border-radius: 6px; resize: vertical; box-sizing: border-box; color: var(--fg); }
+.edit textarea:focus { outline: none; border-color: var(--orange); }
+.edit .actions { margin-top: .65rem; }
+.empty { color: var(--fg-mut); font-size: 13px; padding: 1.25rem; background: var(--bg); border: 1px dashed var(--br-2); border-radius: 6px; text-align: center; }
+.toast { position: sticky; top: 0; z-index: 10; background: var(--bg); border: 1px solid var(--br-2); border-radius: 6px; padding: 10px 14px; font-size: 13px; margin-bottom: 12px; display: none; font-weight: 500; }
+.toast.on { display: block; }
+.toast.ok { background: var(--product-bg); border-color: var(--product-fg); color: #0e3d1f; }
+.toast.err { background: var(--red-bg); border-color: var(--red); color: #5b0e0e; }
+.note { color: var(--fg-mut); font-size: 11px; line-height: 1.4; margin: .25rem 0 0; }
+.section { margin-top: 1.75rem; }
+.spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--br-3); border-top-color: var(--orange); border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.footer { color: var(--fg-mut); font-size: 11px; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--br-3); text-align: center; letter-spacing: 0.02em; }
+.footer .gg { color: var(--orange); font-weight: 500; }
+
+@media (max-width: 640px) {
+  .body-grid { grid-template-columns: 1fr; }
+  .photo-stack { flex-direction: row; align-items: center; }
+  .photo-stack .thumb { max-width: 140px; }
+  .photo-stack .extras { flex-direction: column; }
+  .photo-stack .extras img { width: 50px; height: 50px; }
+  .card-head { flex-direction: column; align-items: flex-start; }
+  .source-badge { align-self: flex-start; }
+}
+@media (max-width: 480px) {
+  .app { padding: 1rem .85rem 2.5rem; }
+  .actions { flex-direction: column; align-items: stretch; }
+  .actions select { width: 100%; }
+  h1 { font-size: 19px; }
+  .copy { padding: 12px 14px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="brand-bar">
+  <span class="brand-mark">EXPANDO</span>
+  <span class="brand-tag">Willsoor FB approval workflow</span>
+</div>
+<h1>Schvalování FB postů</h1>
+<p class="sub">Drafty z <code>WILLSOOR FB log</code>. Schválené posty jdou na Willsoor.cz Facebook přes Buffer.</p>
+
+<div id="toast" class="toast"></div>
+
+<div class="bar">
+  <button class="btn" id="reload" type="button">Obnovit</button>
+  <span class="stat">Čeká: <b id="cnt-pending">–</b></span>
+  <span class="stat">Schváleno: <b id="cnt-approved">–</b></span>
+  <span class="stat">Zamítnuto: <b id="cnt-rejected">–</b></span>
+</div>
+
+<div class="filters">
+  <span class="group-label">Stav</span>
+  <button class="filter-btn" data-filter="status" data-value="pending" type="button">Čeká</button>
+  <button class="filter-btn" data-filter="status" data-value="approved" type="button">Schváleno</button>
+  <button class="filter-btn" data-filter="status" data-value="rejected" type="button">Zamítnuto</button>
+  <button class="filter-btn" data-filter="status" data-value="all" type="button">Vše</button>
+  <span class="divider"></span>
+  <span class="group-label">Zdroj</span>
+  <button class="filter-btn" data-filter="type" data-value="all" type="button">Vše</button>
+  <button class="filter-btn type-product" data-filter="type" data-value="product-photo" type="button">📷 Produkt</button>
+  <button class="filter-btn type-ai" data-filter="type" data-value="lifestyle-ai" type="button">🎨 AI</button>
+  <button class="filter-btn type-pl" data-filter="type" data-value="pl-adapt" type="button">🇵🇱 PL</button>
+  <button class="filter-btn type-carousel" data-filter="type" data-value="carousel-web" type="button">🛍️ Akce na webu</button>
+</div>
+
+<div id="loading" class="empty"><span class="spinner"></span> Načítám drafty…</div>
+<div id="list-section" class="section" style="display:none;">
+<div id="list"></div>
+</div>
+
+<div class="footer">
+  EXPANDO · <span class="gg">Growing globally together.</span>
+</div>
+
+</div>
+
+<script>
+let rows = [];
+let filterStatus = 'pending';
+let filterType = 'all';
+
+function toast(msg, kind) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast on ' + (kind || '');
+  setTimeout(() => { t.className = 'toast'; }, 5000);
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function statusKind(s) {
+  s = (s || '').toLowerCase();
+  if (s.startsWith('approved') || s.startsWith('published') || s.startsWith('scheduled')) return 'approved';
+  if (s.startsWith('rejected') || s.startsWith('cancelled') || s.startsWith('canceled')) return 'rejected';
+  return 'pending';
+}
+
+function shortDateCz(dateStr) {
+  // "2026-05-24" → "Ne 24.5." (compact varianta pro malé pily)
+  if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr || '?';
+  const d = new Date(dateStr + 'T12:00:00+02:00');
+  const dayNames = ['Ne','Po','Út','St','Čt','Pá','So'];
+  return dayNames[d.getDay()] + ' ' + d.getDate() + '.' + (d.getMonth()+1) + '.';
+}
+
+function fullDateCz(dateStr) {
+  // "2026-05-24" → "neděle 24.5.2026"
+  if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr || '?';
+  const d = new Date(dateStr + 'T12:00:00+02:00');
+  const dayNames = ['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
+  return dayNames[d.getDay()] + ' ' + d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+}
+
+function dateTimeCz(dateStr, timeHHMM) {
+  // "2026-05-24" + "19:30" → "neděle 24.5.2026 19:30"
+  return fullDateCz(dateStr) + ' ' + (timeHHMM || '19:30');
+}
+
+function defaultDueAt(dateStr) {
+  const pad = n => String(n).padStart(2, '0');
+  let target;
+  if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    target = new Date(dateStr + 'T19:30:00+02:00');
+    if (target.getTime() < Date.now() + 60000) {
+      target = new Date();
+      target.setHours(19, 30, 0, 0);
+      if (target.getTime() < Date.now() + 60000) target.setDate(target.getDate() + 1);
+    }
+  } else {
+    target = new Date();
+    target.setHours(19, 30, 0, 0);
+    if (target.getTime() < Date.now() + 60000) target.setDate(target.getDate() + 1);
+  }
+  return target.getFullYear()+'-'+pad(target.getMonth()+1)+'-'+pad(target.getDate())+'T'+pad(target.getHours())+':'+pad(target.getMinutes())+':00+02:00';
+}
+
+function parseExtras(s) {
+  if (!s) return [];
+  try {
+    const arr = JSON.parse(s);
+    return Array.isArray(arr) ? arr.filter(Boolean) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function sourceBadge(ptype) {
+  const map = {
+    'pl-adapt': { cls: 'pl', label: '🇵🇱 Facebook Willsoor PL' },
+    'product-photo': { cls: 'product', label: '📷 Produkt z webu' },
+    'lifestyle-ai': { cls: 'ai', label: '🎨 AI fotka' },
+    'carousel-web': { cls: 'carousel', label: '🛍️ Akce na webu' }
+  };
+  const cfg = map[(ptype || '').toLowerCase()];
+  if (!cfg) return '';
+  return '<span class="source-badge ' + cfg.cls + '">' + cfg.label + '</span>';
+}
+
+function renderCopy(copyText) {
+  // Backend stores paragraphs as ' / ' separated. Render as <p> blocks.
+  if (!copyText) return '<i>(prázdný caption)</i>';
+  return copyText
+    .split(/\s\/\s/)
+    .map(p => '<p>' + escapeHtml(p.trim()) + '</p>')
+    .join('');
+}
+
+function renderCard(r, kind) {
+  const id = 'card-' + r._row;
+  const copyText = r.copy || '';
+  const product = r.product_id ? 'Produkt ' + escapeHtml(r.product_id) : '';
+  const productLink = r.product_url
+    ? '<a href="' + escapeHtml(r.product_url) + '" target="_blank" rel="noopener">' + escapeHtml(r.product_url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 70)) + (r.product_url.length > 70 ? '…' : '') + '</a>'
+    : '';
+  const tmpl = r.template ? '<span class="pill tmpl">Šablona ' + escapeHtml(r.template) + '</span>' : '';
+  const priority = r.source_priority ? '<span class="pill priority">' + escapeHtml(r.source_priority) + '</span>' : '';
+  const status = r.status ? '<span class="pill status-' + kind + '">' + escapeHtml(r.status) + '</span>' : '';
+  const ptype = (r.post_type || '').toLowerCase();
+  const dueDefault = defaultDueAt(r.date);
+  const photoUrl = r.lifestyle_photo_url || '';
+  const extras = parseExtras(r.extra_photo_urls);
+  const allPhotos = photoUrl ? [photoUrl].concat(extras) : extras;
+
+  let photoBlock;
+  if (allPhotos.length === 0) {
+    photoBlock = '<div class="note">Foto ještě není na GitHubu.</div>';
+  } else {
+    let cover = '<img class="thumb" src="' + escapeHtml(allPhotos[0]) + '" alt="Foto pro ' + escapeHtml(r.date) + '" onerror="this.style.display=&#39;none&#39;" />';
+    let extrasHtml = '';
+    if (allPhotos.length > 1) {
+      extrasHtml = '<div class="extras">' + allPhotos.slice(1).map(u =>
+        '<img src="' + escapeHtml(u) + '" alt="extra" onclick="window.open(this.src,\'_blank\')" onerror="this.style.display=&#39;none&#39;" />'
+      ).join('') + '</div>';
+    }
+    const countLabel = allPhotos.length > 1 ? '<div class="photo-count">' + allPhotos.length + ' fotek v carouselu</div>' : '';
+    photoBlock = cover + extrasHtml + countLabel;
+  }
+
+  // Source banner: prominent, right-aligned
+  const banner = sourceBadge(ptype);
+
+  // Schedule line — short Cz date+time
+  let scheduleLine = '';
+  if (kind === 'pending') {
+    scheduleLine = '<div class="meta-line"><span class="ico">⏰</span><span>Vydat: <b>' + dateTimeCz(r.date, '19:30') + '</b></span></div>';
+  } else if (r.scheduled_at) {
+    // For approved/rejected — show actual scheduled timestamp short-formatted
+    const m = r.scheduled_at.match(/^(\d{4}-\d{2}-\d{2})(?:T(\d{2}):(\d{2}))?/);
+    if (m) {
+      scheduleLine = '<div class="meta-line"><span class="ico">⏰</span><span>Naplánováno na <b>' + dateTimeCz(m[1], (m[2]||'19') + ':' + (m[3]||'30')) + '</b></span></div>';
+    }
+  }
+
+  // PL inspiration link
+  let plLine = '';
+  if (r.pl_source_url) {
+    const shortUrl = r.pl_source_url.replace(/^https?:\/\/(www\.)?facebook\.com\//, 'fb.com/').slice(0, 60);
+    plLine = '<div class="meta-line"><span class="ico">🇵🇱</span><span>Inspirace: <a href="' + escapeHtml(r.pl_source_url) + '" target="_blank" rel="noopener">' + escapeHtml(shortUrl) + '…</a></span></div>';
+  }
+
+  let productLine = '';
+  if (product || productLink) {
+    productLine = '<div class="meta-line"><span class="ico">🔗</span><span>' + product + (product && productLink ? ' · ' : '') + productLink + '</span></div>';
+  }
+
+  let detailLine = '';
+  if (r.source_detail) {
+    detailLine = '<div class="meta-line"><span class="ico">ℹ️</span><span>' + escapeHtml(r.source_detail) + '</span></div>';
+  }
+
+  const actions = kind === 'pending'
+    ? '<button class="btn btn-primary" data-action="approve" data-row="' + r._row + '" type="button">Schválit a poslat na FB</button>' +
+      '<button class="btn" data-action="edit" data-row="' + r._row + '" type="button">Upravit</button>' +
+      '<button class="btn btn-danger" data-action="reject" data-row="' + r._row + '" type="button">Zamítnout</button>' +
+      '<select id="due-' + r._row + '" title="Naplánovat na">' +
+        '<option value="' + dueDefault + '">' + dateTimeCz(r.date, '19:30') + '</option>' +
+        '<option value="now">Publikovat ihned</option>' +
+        '<option value="custom">Vlastní…</option>' +
+      '</select>'
+    : '<span class="meta-block">Buffer post ID: ' + escapeHtml(r.buffer_post_id || '—') + '</span>';
+
+  return '<div class="card ' + (kind === 'pending' ? '' : 'done') + '" id="' + id + '" data-status="' + kind + '" data-type="' + ptype + '">' +
+    '<div class="card-head">' +
+      '<div class="card-head-left">' +
+        '<span class="pill date">' + escapeHtml(shortDateCz(r.date)) + '</span>' +
+        priority + tmpl + status +
+      '</div>' +
+    '</div>' +
+    '<div class="body-grid">' +
+      '<div class="photo-stack">' + photoBlock + '</div>' +
+      '<div class="body-right">' +
+        (banner ? '<div class="banner-row">' + banner + '</div>' : '') +
+        '<div class="copy">' + renderCopy(copyText) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="meta-block">' +
+      productLine +
+      scheduleLine +
+      plLine +
+      detailLine +
+    '</div>' +
+    '<div class="actions">' + actions + '</div>' +
+    '<div class="edit" id="edit-' + r._row + '">' +
+      '<textarea id="edit-text-' + r._row + '">' + escapeHtml(copyText) + '</textarea>' +
+      '<div class="actions">' +
+        '<button class="btn btn-primary" data-action="save-edit" data-row="' + r._row + '" type="button">Uložit změny</button>' +
+        '<button class="btn" data-action="cancel-edit" data-row="' + r._row + '" type="button">Zrušit</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function applyFilterUI() {
+  // Highlight the active filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    const f = btn.getAttribute('data-filter');
+    const v = btn.getAttribute('data-value');
+    if ((f === 'status' && v === filterStatus) || (f === 'type' && v === filterType)) {
+      btn.classList.add('active');
+    }
+  });
+}
+
+function render() {
+  const pending = rows.filter(r => statusKind(r.status) === 'pending');
+  const approved = rows.filter(r => statusKind(r.status) === 'approved');
+  const rejected = rows.filter(r => statusKind(r.status) === 'rejected');
+
+  document.getElementById('cnt-pending').textContent = pending.length;
+  document.getElementById('cnt-approved').textContent = approved.length;
+  document.getElementById('cnt-rejected').textContent = rejected.length;
+
+  let visible = rows.slice();
+  if (filterStatus !== 'all') visible = visible.filter(r => statusKind(r.status) === filterStatus);
+  if (filterType !== 'all') visible = visible.filter(r => (r.post_type || '').toLowerCase() === filterType);
+
+  // Sort: pending first by date asc, others by date desc
+  visible.sort((a, b) => {
+    const ka = statusKind(a.status), kb = statusKind(b.status);
+    if (ka === 'pending' && kb !== 'pending') return -1;
+    if (kb === 'pending' && ka !== 'pending') return 1;
+    if (ka === 'pending') return (a.date || '').localeCompare(b.date || '');
+    return (b.date || '').localeCompare(a.date || '');
+  });
+
+  const list = document.getElementById('list');
+  if (!visible.length) {
+    list.innerHTML = '<div class="empty">Žádné drafty pro zvolený filtr.</div>';
+  } else {
+    list.innerHTML = visible.map(r => renderCard(r, statusKind(r.status))).join('');
+  }
+  document.getElementById('list-section').style.display = '';
+  document.getElementById('loading').style.display = 'none';
+  applyFilterUI();
+}
+
+function loadData() {
+  document.getElementById('loading').style.display = '';
+  document.getElementById('list-section').style.display = 'none';
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      rows = (res && res.rows) ? res.rows : [];
+      render();
+    })
+    .withFailureHandler(function(err) {
+      document.getElementById('loading').innerHTML = '<span style="color:#a32d2d">Chyba: ' + escapeHtml(err.message || err) + '</span>';
+      toast('Chyba načítání: ' + (err.message || err), 'err');
+    })
+    .getDrafts();
+}
+
+function approveRow(r) {
+  const dueSel = document.getElementById('due-' + r._row);
+  let dueValue = dueSel ? dueSel.value : '';
+  let mode = 'customScheduled';
+  let dueAt = null;
+  if (dueValue === 'now') {
+    mode = 'shareNow';
+  } else if (dueValue === 'custom') {
+    const v = prompt('Zadej čas v ISO 8601 (např. 2026-05-05T20:00:00+02:00):', defaultDueAt(r.date));
+    if (!v) return;
+    dueAt = v;
+  } else {
+    dueAt = dueValue;
+  }
+
+  if (!confirm('Publikovat na Willsoor FB?\n\n' + r.copy.slice(0, 200) + '…\n\nKdy: ' + (mode === 'shareNow' ? 'Teď' : dateTimeCz(r.date, '19:30')))) return;
+
+  const btn = document.querySelector('[data-action="approve"][data-row="' + r._row + '"]');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Publikuji…';
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (!res || !res.ok) {
+        btn.disabled = false;
+        btn.textContent = 'Schválit a poslat na FB';
+        toast('Buffer chyba: ' + (res && res.error || 'unknown'), 'err');
+        return;
+      }
+      r.status = 'approved_via_appscript';
+      r.buffer_post_id = res.bufferPostId || '';
+      r.scheduled_at = dueAt || 'now';
+      render();
+      toast('Publikováno do Bufferu (post ID: ' + (res.bufferPostId || '?') + ').', 'ok');
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Schválit a poslat na FB';
+      toast('Chyba: ' + (err.message || err), 'err');
+    })
+    .approve(r._row, mode, dueAt);
+}
+
+function rejectRow(r) {
+  if (!confirm('Zamítnout tento draft?')) return;
+  const btn = document.querySelector('[data-action="reject"][data-row="' + r._row + '"]');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Zamítám…';
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (res && res.ok) {
+        r.status = 'rejected_via_appscript';
+        render();
+        toast('Draft zamítnut.', 'ok');
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Zamítnout';
+        toast('Chyba: ' + (res && res.error || 'unknown'), 'err');
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Zamítnout';
+      toast('Chyba: ' + (err.message || err), 'err');
+    })
+    .reject(r._row);
+}
+
+function toggleEdit(r, on) {
+  const box = document.getElementById('edit-' + r._row);
+  if (on) box.classList.add('on'); else box.classList.remove('on');
+}
+
+function saveEdit(r) {
+  const newText = (document.getElementById('edit-text-' + r._row).value || '').trim();
+  if (!newText) { toast('Caption nemůže být prázdný.', 'err'); return; }
+  const btn = document.querySelector('[data-action="save-edit"][data-row="' + r._row + '"]');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Ukládám…';
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (res && res.ok) {
+        r.copy = newText.replace(/\n\n+/g, ' / ').replace(/\n+/g, ' / ').trim();
+        toggleEdit(r, false);
+        render();
+        toast('Caption uložen.', 'ok');
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Uložit změny';
+        toast('Chyba: ' + (res && res.error || 'unknown'), 'err');
+      }
+    })
+    .withFailureHandler(function(err) {
+      btn.disabled = false;
+      btn.textContent = 'Uložit změny';
+      toast('Chyba: ' + (err.message || err), 'err');
+    })
+    .editCopy(r._row, newText);
+}
+
+document.addEventListener('click', function(ev) {
+  const filterBtn = ev.target.closest('.filter-btn');
+  if (filterBtn) {
+    const f = filterBtn.getAttribute('data-filter');
+    const v = filterBtn.getAttribute('data-value');
+    if (f === 'status') filterStatus = v;
+    else if (f === 'type') filterType = v;
+    render();
+    return;
+  }
+
+  const t = ev.target.closest('[data-action]');
+  if (!t) return;
+  const action = t.getAttribute('data-action');
+  const rowNum = parseInt(t.getAttribute('data-row'), 10);
+  const r = rows.find(x => x._row === rowNum);
+  if (!r) return;
+  if (action === 'approve') approveRow(r);
+  else if (action === 'reject') rejectRow(r);
+  else if (action === 'edit') toggleEdit(r, true);
+  else if (action === 'cancel-edit') toggleEdit(r, false);
+  else if (action === 'save-edit') saveEdit(r);
+});
+
+document.getElementById('reload').addEventListener('click', loadData);
+loadData();
+</script>
+</body>
+</html>
