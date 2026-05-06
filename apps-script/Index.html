@@ -40,14 +40,14 @@ body { margin: 0; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Se
 h1 { font-size: 22px; font-weight: 700; margin: 0 0 .15rem; letter-spacing: -0.01em; }
 h2 { font-size: 16px; font-weight: 700; margin: 1.75rem 0 .75rem; color: var(--fg-2); letter-spacing: -0.005em; }
 .sub { color: var(--fg-3); font-size: 13px; margin: 0 0 1.5rem; }
-.bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
-.stat { background: var(--bg); border: 1px solid var(--br-3); border-radius: 6px; padding: 7px 12px; font-size: 12px; color: var(--fg-3); }
-.stat b { font-weight: 700; color: var(--fg); }
-.filters { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 1.25rem; padding: 8px 0; }
-.filters .group-label { font-size: 11px; color: var(--fg-mut); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
-.filters .filter-btn { background: var(--bg); border: 1px solid var(--br-2); border-radius: 18px; padding: 6px 12px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--fg-2); transition: all 0.15s; }
+.filters { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem; padding: 8px 0; }
+.filters .btn-icon { background: var(--bg); border: 1px solid var(--br-2); border-radius: 50%; width: 32px; height: 32px; padding: 0; font-size: 16px; line-height: 1; cursor: pointer; font-family: inherit; color: var(--fg-2); transition: transform 0.15s, background 0.15s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 4px; }
+.filters .btn-icon:hover { background: var(--br-3); transform: rotate(90deg); }
+.filters .filter-btn { background: var(--bg); border: 1px solid var(--br-2); border-radius: 18px; padding: 6px 12px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--fg-2); transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
 .filters .filter-btn:hover { background: var(--br-3); }
+.filters .filter-btn .cnt { background: var(--br-3); color: var(--fg-2); border-radius: 10px; padding: 1px 7px; font-size: 11px; font-weight: 700; min-width: 18px; text-align: center; }
 .filters .filter-btn.active { background: var(--fg); color: white; border-color: var(--fg); }
+.filters .filter-btn.active .cnt { background: rgba(255,255,255,0.25); color: white; }
 .filters .filter-btn.active.type-pl { background: var(--pl-fg); border-color: var(--pl-fg); }
 .filters .filter-btn.active.type-product { background: var(--product-fg); border-color: var(--product-fg); }
 .filters .filter-btn.active.type-ai { background: var(--ai-fg); border-color: var(--ai-fg); }
@@ -148,22 +148,14 @@ h2 { font-size: 16px; font-weight: 700; margin: 1.75rem 0 .75rem; color: var(--f
 
 <div id="toast" class="toast"></div>
 
-<div class="bar">
-  <button class="btn" id="reload" type="button">Obnovit</button>
-  <span class="stat">Čeká: <b id="cnt-pending">–</b></span>
-  <span class="stat">Schváleno: <b id="cnt-approved">–</b></span>
-  <span class="stat">Zamítnuto: <b id="cnt-rejected">–</b></span>
-</div>
-
 <div class="filters">
-  <span class="group-label">Stav</span>
-  <button class="filter-btn" data-filter="status" data-value="pending" type="button">Čeká</button>
-  <button class="filter-btn" data-filter="status" data-value="approved" type="button">Schváleno</button>
-  <button class="filter-btn" data-filter="status" data-value="rejected" type="button">Zamítnuto</button>
+  <button class="btn-icon" id="reload" type="button" title="Obnovit data">↻</button>
+  <button class="filter-btn" data-filter="status" data-value="pending" type="button">Čeká <span class="cnt" id="cnt-pending">–</span></button>
+  <button class="filter-btn" data-filter="status" data-value="approved" type="button">Schváleno <span class="cnt" id="cnt-approved">–</span></button>
+  <button class="filter-btn" data-filter="status" data-value="rejected" type="button">Zamítnuto <span class="cnt" id="cnt-rejected">–</span></button>
   <button class="filter-btn" data-filter="status" data-value="all" type="button">Vše</button>
   <span class="divider"></span>
-  <span class="group-label">Zdroj</span>
-  <button class="filter-btn" data-filter="type" data-value="all" type="button">Vše</button>
+  <button class="filter-btn" data-filter="type" data-value="all" type="button">Všechny zdroje</button>
   <button class="filter-btn type-product" data-filter="type" data-value="product-photo" type="button">📷 Produkt</button>
   <button class="filter-btn type-ai" data-filter="type" data-value="lifestyle-ai" type="button">🎨 AI</button>
   <button class="filter-btn type-pl" data-filter="type" data-value="pl-adapt" type="button">🇵🇱 PL</button>
