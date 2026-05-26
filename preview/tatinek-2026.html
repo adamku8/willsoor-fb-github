@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Svátek otců 2026 — Kampaň Preview</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Inter, -apple-system, Arial, sans-serif; background: #e8e9ee; color: #1a1b2e; }
+
+  /* ─── TOP BAR ─── */
+  .topbar { background: #2b2d45; color: white; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar-title { font-size: 15px; font-weight: 700; letter-spacing: .5px; }
+  .topbar-badge { background: #424571; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+
+  /* ─── TABS ─── */
+  .tabs { background: #1e2035; display: flex; padding: 0 32px; gap: 4px; overflow-x: auto; }
+  .tab { padding: 13px 22px; font-size: 13px; font-weight: 600; color: #8888bb; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all .15s; }
+  .tab:hover { color: #ccccee; }
+  .tab.active { color: #fff; border-bottom-color: #7c7fff; }
+
+  /* ─── PANELS ─── */
+  .panel { display: none; padding: 32px; }
+  .panel.active { display: block; }
+
+  /* ─── BROWSER FRAME ─── */
+  .browser { background: white; border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,.18); overflow: hidden; max-width: 900px; margin: 0 auto; }
+  .browser-chrome { background: #e2e3e7; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+  .dots { display: flex; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .url-bar { flex: 1; background: white; border-radius: 6px; padding: 5px 14px; font-size: 12px; color: #555; font-family: monospace; }
+  .willsoor-nav { background: white; border-bottom: 1px solid #eee; padding: 0 32px; display: flex; align-items: center; gap: 0; }
+  .willsoor-nav .logo { font-size: 20px; font-weight: 800; color: #2b2d45; padding: 14px 0; margin-right: 32px; letter-spacing: -0.5px; }
+  .willsoor-nav a { font-size: 13px; color: #444; padding: 16px 14px; display: inline-block; text-decoration: none; font-weight: 500; }
+  .willsoor-nav a.active { color: #2b2d45; font-weight: 700; border-bottom: 2px solid #2b2d45; }
+
+  /* ─── HERO BANNER ─── */
+  .hero { position: relative; overflow: hidden; height: 360px; }
+  .hero img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(100deg, rgba(27,29,50,.82) 0%, rgba(27,29,50,.45) 55%, rgba(27,29,50,.05) 100%); display: flex; align-items: center; padding: 0 52px; }
+  .hero-content { color: white; max-width: 460px; }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: #aaaadd; margin-bottom: 12px; font-weight: 600; }
+  .hero-h1 { font-size: 38px; font-weight: 800; line-height: 1.08; margin-bottom: 14px; }
+  .hero-code-box { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,.13); border: 1.5px solid rgba(255,255,255,.3); border-radius: 6px; padding: 9px 18px; margin-bottom: 10px; }
+  .hero-code { font-family: 'Courier New', monospace; font-size: 24px; font-weight: 800; letter-spacing: 5px; color: #ffffcc; }
+  .hero-discount { font-size: 13px; font-weight: 700; color: #ffffaa; background: rgba(255,200,0,.2); padding: 2px 8px; border-radius: 4px; }
+  .hero-validity { font-size: 12px; color: #aaaacc; margin-bottom: 22px; }
+  .hero-cta { display: inline-block; background: white; color: #2b2d45; padding: 12px 26px; border-radius: 5px; font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-decoration: none; }
+
+  /* ─── CATEGORY PRODUCTS (simplified) ─── */
+  .products { background: white; padding: 28px 32px; }
+  .products-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #999; margin-bottom: 18px; font-weight: 600; }
+  .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .product-card { border-radius: 6px; overflow: hidden; }
+  .product-card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+  .product-card .pname { font-size: 12px; font-weight: 600; color: #333; margin-top: 7px; padding: 0 2px; }
+  .product-card .pprice { font-size: 12px; color: #888; padding: 0 2px; }
+
+  /* ─── EMAIL FRAME ─── */
+  .email-wrapper { background: #dde0e8; padding: 30px; border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,.15); max-width: 680px; margin: 0 auto; }
+  .email-meta { font-size: 11px; color: #888; margin-bottom: 16px; font-family: monospace; line-height: 1.8; }
+  .email-meta strong { color: #444; }
+  .email-inner { max-width: 600px; margin: 0 auto; border-radius: 4px; overflow: hidden; }
+
+  /* ─── FB MOCKUP ─── */
+  .fb-wrapper { max-width: 500px; margin: 0 auto; }
+  .fb-card { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,.12); overflow: hidden; }
+  .fb-top { padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+  .fb-avatar { width: 40px; height: 40px; border-radius: 50%; background: #2b2d45; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+  .fb-meta .fb-name { font-size: 14px; font-weight: 700; color: #050505; }
+  .fb-meta .fb-time { font-size: 12px; color: #65676b; }
+  .fb-caption { padding: 2px 16px 14px; font-size: 14px; color: #050505; line-height: 1.65; }
+  .fb-caption .hashtag { color: #1877f2; }
+  .fb-caption .promo { font-size: 16px; font-weight: 800; color: #2b2d45; font-family: 'Courier New', monospace; letter-spacing: 3px; display: block; margin: 10px 0; }
+  .fb-img { width: 100%; display: block; }
+  .fb-link-preview { border-top: 1px solid #e4e6eb; padding: 10px 16px; background: #f0f2f5; display: flex; align-items: center; gap: 12px; }
+  .fb-link-domain { font-size: 11px; color: #65676b; text-transform: uppercase; }
+  .fb-link-title { font-size: 14px; font-weight: 700; color: #050505; }
+  .fb-actions { border-top: 1px solid #e4e6eb; padding: 4px 8px; display: flex; }
+  .fb-action { flex: 1; padding: 8px; text-align: center; font-size: 13px; font-weight: 700; color: #65676b; cursor: pointer; border-radius: 4px; }
+  .fb-action:hover { background: #f0f2f5; }
+
+  /* ─── PANEL HEADER ─── */
+  .panel-header { max-width: 900px; margin: 0 auto 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .panel-title { font-size: 22px; font-weight: 800; color: #2b2d45; }
+  .panel-sub { font-size: 13px; color: #888; margin-top: 4px; }
+  .badge { display: inline-block; background: #eef; color: #424571; border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 700; letter-spacing: .5px; }
+  .badge.green { background: #e8f8ee; color: #1a7a40; }
+  .badge.red { background: #fee; color: #c0392b; }
+
+  /* ─── ACTION LIST ─── */
+  .action-grid { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media(max-width:700px) { .action-grid { grid-template-columns: 1fr; } }
+  .action-col { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,.08); overflow: hidden; }
+  .action-col-header { padding: 16px 20px; font-size: 14px; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px; }
+  .action-col-header.web { background: #2b2d45; }
+  .action-col-header.email { background: #424571; }
+  .action-col-header.fb { background: #1877f2; }
+  .action-item { padding: 12px 20px; border-bottom: 1px solid #f0f0f5; display: flex; gap: 12px; align-items: flex-start; }
+  .action-item:last-child { border-bottom: none; }
+  .action-num { width: 22px; height: 22px; border-radius: 50%; background: #f0f0f8; color: #424571; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .action-num.web { background: #e8e9f0; color: #2b2d45; }
+  .action-num.email { background: #eeeeff; color: #424571; }
+  .action-num.fb { background: #e7f0ff; color: #1877f2; }
+  .action-text { font-size: 13px; color: #333; line-height: 1.5; }
+  .action-text strong { color: #1a1b2e; display: block; font-weight: 700; margin-bottom: 2px; }
+  .action-text code { background: #f0f0f8; padding: 1px 6px; border-radius: 3px; font-size: 11px; color: #424571; font-family: monospace; }
+  .action-text .hint { font-size: 11px; color: #999; margin-top: 3px; display: block; }
+
+  .caption-box { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,.08); padding: 20px 24px; max-width: 900px; margin: 0 auto 20px; }
+  .caption-box h3 { font-size: 13px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .caption-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:600px) { .caption-row { grid-template-columns: 1fr; } }
+  .caption-item { background: #f7f7fc; border-radius: 8px; padding: 14px 16px; }
+  .caption-item .ci-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #999; font-weight: 600; margin-bottom: 8px; }
+  .caption-item p { font-size: 13px; color: #333; line-height: 1.65; }
+  .caption-item .code { font-family: 'Courier New', monospace; font-weight: 800; color: #424571; font-size: 15px; letter-spacing: 3px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">🎁 Svátek otců 2026 — Kampaň Preview &amp; Akční list</div>
+  <div class="topbar-badge">TATA10 · 9.6.–21.6.2026</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="show('web',this)">🌐 Web banner</div>
+  <div class="tab" onclick="show('email1',this)">📧 Email 1 (9. 6.)</div>
+  <div class="tab" onclick="show('email2',this)">⏰ Email 2 (19. 6.)</div>
+  <div class="tab" onclick="show('fb',this)">📘 Facebook</div>
+  <div class="tab" onclick="show('akcni',this)">✅ Akční list</div>
+</div>
+
+<!-- ═══════════════════ WEB ═══════════════════ -->
+<div id="panel-web" class="panel active">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Web banner — výpis kategorie</div>
+      <div class="panel-sub">Kde: willsoor.cz/panske-kosile/ · Formát: 16:9 hero banner</div>
+    </div>
+    <span class="badge">9. 6. – 21. 6. 2026</span>
+  </div>
+
+  <div class="browser">
+    <div class="browser-chrome">
+      <div class="dots">
+        <div class="dot" style="background:#ff5f57"></div>
+        <div class="dot" style="background:#ffbd2e"></div>
+        <div class="dot" style="background:#28c840"></div>
+      </div>
+      <div class="url-bar">🔒 willsoor.cz/panske-kosile/</div>
+    </div>
+    <div class="willsoor-nav">
+      <div class="logo">Willsoor</div>
+      <a href="#" class="active">Pánské košile</a>
+      <a href="#">Dámské košile</a>
+      <a href="#">Obleky &amp; Saka</a>
+      <a href="#">Novinky</a>
+      <a href="#">Akce</a>
+    </div>
+    <div class="hero">
+      <img src="https://raw.githubusercontent.com/adamku8/willsoor-fb-github/main/posts/tatinek-2026/03_nabrezi_city.png" alt="Svátek otců banner" />
+      <div class="hero-overlay">
+        <div class="hero-content">
+          <div class="hero-eyebrow">🎁 Svátek otců · Neděle 21. června 2026</div>
+          <div class="hero-h1">Daruj košili,<br>která sedí.</div>
+          <div class="hero-code-box">
+            <span class="hero-code">TATA10</span>
+            <span class="hero-discount">−10 %</span>
+          </div>
+          <div class="hero-validity">Sleva na pánské košile · platí do 21. 6. 2026</div>
+          <a href="#" class="hero-cta">PROHLÉDNOUT KOLEKCI →</a>
+        </div>
+      </div>
+    </div>
+    <div class="products">
+      <div class="products-title">Pánské košile — výběr pro tátu</div>
+      <div class="product-grid">
+        <div class="product-card">
+          <img src="https://www.willsoor.cz/images/produkty/thumb2/1984843988-43989-43990-43991_img_8713_1.jpg" alt="">
+          <div class="pname">Světle modrá</div><div class="pprice">od 890 Kč</div>
+        </div>
+        <div class="product-card">
+          <img src="https://www.willsoor.cz/images/produkty/thumb2/1912043252-43254_dsc04846_1.jpg" alt="">
+          <div class="pname">Tmavě modrá</div><div class="pprice">od 890 Kč</div>
+        </div>
+        <div class="product-card">
+          <img src="https://www.willsoor.cz/images/produkty/thumb2/1983643970-43971-43972-43973_img_3008_1.jpg" alt="">
+          <div class="pname">Bílá klasická</div><div class="pprice">od 890 Kč</div>
+        </div>
+        <div class="product-card">
+          <img src="https://www.willsoor.cz/images/produkty/thumb2/1684843057-43058-43059_2148_1.jpg" alt="">
+          <div class="pname">Bílá s proužky</div><div class="pprice">od 990 Kč</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EMAIL 1 ═══════════════════ -->
+<div id="panel-email1" class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Email 1 — Co táta opravdu chce 👔</div>
+      <div class="panel-sub">Odesílatel: Willsoor &lt;info@willsoor.cz&gt; · Datum: Pondělí 9. 6. 2026, 9:00</div>
+    </div>
+    <span class="badge green">Odesílá se 9. 6.</span>
+  </div>
+
+  <div class="email-wrapper">
+    <div class="email-meta">
+      <strong>Od:</strong> Willsoor &lt;info@willsoor.cz&gt;<br>
+      <strong>Předmět:</strong> Co táta opravdu chce 👔<br>
+      <strong>Preheader:</strong> Košile, která mu bude sedět celý rok.
+    </div>
+    <div class="email-inner">
+      <!-- ACTUAL EMAIL HTML - hero replaced with lifestyle banner -->
+      <table border="0" cellpadding="0" cellspacing="0" width="600" style="background:#fff;max-width:600px;font-family:Inter,Arial,sans-serif">
+        <tr><td bgcolor="#2b2d45" align="center" style="padding:10px 0;font-size:12px;color:#fff;letter-spacing:1.5px;font-weight:600">SVÁTEK OTCŮ &nbsp;·&nbsp; NEDĚLE 21. ČERVNA 2026</td></tr>
+        <tr><td bgcolor="#fff" align="center" style="padding:22px 30px 18px"><img src="https://www.willsoor.cz/images/logotype.png" alt="Willsoor" width="150" style="display:block;border:0"/></td></tr>
+        <tr><td style="padding:0 20px">
+          <div style="position:relative;overflow:hidden;border-radius:8px;">
+            <img src="https://raw.githubusercontent.com/adamku8/willsoor-fb-github/main/posts/tatinek-2026/03_nabrezi_city.png" alt="Svátek otců 2026" width="560" style="display:block;width:100%;border-radius:8px;"/>
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px;background:linear-gradient(to top,rgba(27,29,50,.85),transparent);">
+              <p style="color:#aaaadd;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin:0 0 4px;font-weight:600">🎁 Svátek otců · 21. 6. 2026</p>
+              <p style="color:white;font-size:22px;font-weight:800;margin:0 0 6px;line-height:1.1">Daruj košili, která sedí.</p>
+              <span style="font-family:'Courier New',monospace;font-size:18px;font-weight:800;color:#ffffcc;letter-spacing:4px;background:rgba(255,255,255,.12);padding:4px 12px;border-radius:4px">TATA10</span>
+            </div>
+          </div>
+        </td></tr>
+        <tr><td bgcolor="#fff" align="center" style="padding:28px 40px 10px"><h1 style="font-size:26px;font-weight:800;color:#2b2d45;margin:0;line-height:1.2">Dárek, který sedí jako šitý</h1></td></tr>
+        <tr><td bgcolor="#fff" align="center" style="padding:8px 44px 22px"><p style="font-size:15px;color:#555;line-height:1.75;margin:0;text-align:center">Svátek otců je za chvíli — a my máme pro tebe ten nejlepší dárkový tip. Košile, ve které se táta bude cítit skvěle celý rok.</p></td></tr>
+        <tr><td bgcolor="#fff" align="center" style="padding:0 40px 28px"><a href="#" style="display:inline-block;background:#424571;color:#fff;font-size:12px;font-weight:700;letter-spacing:1.8px;text-decoration:none;padding:15px 34px;border-radius:4px">PROHLÉDNOUT PÁNSKÉ KOŠILE</a></td></tr>
+        <tr><td bgcolor="#fff" style="padding:0 40px"><hr style="border:0;border-top:1px solid #eee"/></td></tr>
+        <tr><td bgcolor="#fff" align="center" style="padding:22px 40px 14px"><h2 style="font-size:16px;font-weight:700;color:#2b2d45;margin:0">Hledáš inspiraci?</h2></td></tr>
+        <tr><td bgcolor="#fff" style="padding:0 16px 22px"><table border="0" cellpadding="8" cellspacing="0" width="100%"><tr>
+          <td width="33%" align="center" valign="top"><a href="#"><img src="https://www.willsoor.cz/images/produkty/thumb2/1984843988-43989-43990-43991_img_8713_1.jpg" width="155" style="display:block;width:100%;border:0;border-radius:6px"/><p style="font-size:12px;font-weight:600;color:#2b2d45;margin:8px 0 2px">Světle modrá</p><p style="font-size:11px;color:#999;margin:0">Klasický střih</p></a></td>
+          <td width="33%" align="center" valign="top"><a href="#"><img src="https://www.willsoor.cz/images/produkty/thumb2/1912043252-43254_dsc04846_1.jpg" width="155" style="display:block;width:100%;border:0;border-radius:6px"/><p style="font-size:12px;font-weight:600;color:#2b2d45;margin:8px 0 2px">Tmavě modrá</p><p style="font-size:11px;color:#999;margin:0">S puntíkem</p></a></td>
+          <td width="33%" align="center" valign="top"><a href="#"><img src="https://www.willsoor.cz/images/produkty/thumb2/1983643970-43971-43972-43973_img_3008_1.jpg" width="155" style="display:block;width:100%;border:0;border-radius:6px"/><p style="font-size:12px;font-weight:600;color:#2b2d45;margin:8px 0 2px">Bílá</p><p style="font-size:11px;color:#999;margin:0">Hladký vzor</p></a></td>
+        </tr></table></td></tr>
+        <tr><td style="padding:0 20px 26px"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:#f7f6ff;border:2px dashed #424571;border-radius:8px"><tr><td align="center" style="padding:18px 20px">
+          <p style="font-size:11px;color:#888;margin:0 0 6px">Použij při objednávce slevový kód</p>
+          <p style="font-family:'Courier New',monospace;font-size:24px;font-weight:700;color:#424571;margin:0 0 5px;letter-spacing:5px">TATA10</p>
+          <p style="font-size:11px;color:#aaa;margin:0">10% sleva na pánské košile · platí do 21. 6. 2026</p>
+        </td></tr></table></td></tr>
+        <tr><td bgcolor="#f9f9f9" style="padding:16px 40px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+          <td width="33%" align="center" style="font-size:11px;color:#999;line-height:1.6">🚚 Doprava zdarma<br>od 1 500 Kč</td>
+          <td width="33%" align="center" style="font-size:11px;color:#999;line-height:1.6">🔄 Výměna zdarma<br>do 30 dnů</td>
+          <td width="33%" align="center" style="font-size:11px;color:#999;line-height:1.6">🏆 Česká kvalita<br>od roku 2007</td>
+        </tr></table></td></tr>
+        <tr><td bgcolor="#2b2d45" align="center" style="padding:20px 30px">
+          <p style="font-size:11px;color:#5555aa;margin:0;line-height:1.8">Willsoor s.r.o. · willsoor.cz<br><a href="#" style="color:#7777bb">Odhlásit odběr</a></p>
+        </td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ EMAIL 2 ═══════════════════ -->
+<div id="panel-email2" class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Email 2 — ⏰ Ještě 2 dny</div>
+      <div class="panel-sub">Odesílatel: Willsoor &lt;info@willsoor.cz&gt; · Datum: Čtvrtek 19. 6. 2026, 9:00</div>
+    </div>
+    <span class="badge red">Urgency · 19. 6.</span>
+  </div>
+
+  <div class="email-wrapper">
+    <div class="email-meta">
+      <strong>Od:</strong> Willsoor &lt;info@willsoor.cz&gt;<br>
+      <strong>Předmět:</strong> ⏰ Ještě 2 dny — dárek pro tátu máš ✓<br>
+      <strong>Preheader:</strong> Objednávky do pátku doručíme včas.
+    </div>
+    <div class="email-inner">
+      <table border="0" cellpadding="0" cellspacing="0" width="600" style="background:#fff;max-width:600px;font-family:Inter,Arial,sans-serif">
+        <tr><td bgcolor="#c0392b" align="center" style="padding:12px 0;font-size:13px;font-weight:700;color:#fff;letter-spacing:.5px">⏰ SVÁTEK OTCŮ: NEDĚLE 21. ČERVNA — ZBÝVAJÍ 2 DNY</td></tr>
+        <tr><td bgcolor="#fff" align="center" style="padding:20px 30px 16px"><img src="https://www.willsoor.cz/images/logotype.png" alt="Willsoor" width="140" style="display:block;border:0"/></td></tr>
+        <tr><td style="padding:0 20px">
+          <div style="position:relative;overflow:hidden;border-radius:8px;">
+            <img src="https://raw.githubusercontent.com/adamku8/willsoor-fb-github/main/posts/tatinek-2026/02_zahrada_rodina.png" alt="Svátek otců" width="560" style="display:block;width:100%;border-radius:8px;"/>
+            <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(to bottom,rgba(192,57,43,.6) 0%,transparent 40%,rgba(27,29,50,.7) 100%);display:flex;align-items:flex-end;padding:24px;">
+              <div>
+                <p style="color:#ffdddd;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin:0 0 6px;font-weight:600">⏰ Zbývají 2 dny</p>
+                <p style="color:white;font-size:26px;font-weight:800;margin:0;line-height:1.1">Ještě stihneš<br>dárek pro tátu.</p>
+              </div>
+            </div>
+          </div>
+        </td></tr>
+        <tr><td bgcolor="#2b2d45" align="center" style="padding:28px 40px">
+          <p style="font-size:11px;color:#9999cc;letter-spacing:2px;text-transform:uppercase;margin:0 0 8px">Svátek otců 2026 — poslední šance</p>
+          <h1 style="font-size:32px;font-weight:800;color:#fff;margin:0 0 10px;line-height:1.05">Zbývají 2 dny 🎁</h1>
+          <p style="font-size:15px;color:#aaaacc;margin:0;line-height:1.65">Nestihls ještě vybrat dárek?<br>Objednávky do pátku 20. 6. doručíme včas.</p>
+        </td></tr>
+        <tr><td style="padding:16px 20px 20px"><table border="0" cellpadding="0" cellspacing="0" width="100%" style="background:#424571;border-radius:10px"><tr><td align="center" style="padding:20px 24px">
+          <p style="font-size:10px;color:#aaaadd;margin:0 0 6px;text-transform:uppercase;letter-spacing:1.5px">Poslední šance — 10% sleva</p>
+          <p style="font-family:'Courier New',monospace;font-size:28px;font-weight:700;color:#fff;margin:0 0 6px;letter-spacing:6px">TATA10</p>
+          <p style="font-size:11px;color:#aaaadd;margin:0">Platí do 21. 6. 2026 · Pouze na pánské košile</p>
+        </td></tr></table></td></tr>
+        <tr><td bgcolor="#fff" align="center" style="padding:0 40px 24px"><a href="#" style="display:inline-block;background:#c0392b;color:#fff;font-size:13px;font-weight:700;letter-spacing:1.5px;text-decoration:none;padding:16px 38px;border-radius:4px">VYBRAT KOŠILI PRO TÁTU →</a></td></tr>
+        <tr><td bgcolor="#f8f8f8" style="padding:20px 16px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+          <td width="45%" style="padding:0 8px 0 4px"><img src="https://www.willsoor.cz/images/produkty/thumb2/1984843988-43989-43990-43991_img_8713_1.jpg" alt="Pánská košile" width="100%" style="display:block;border:0;border-radius:6px"/></td>
+          <td width="55%" style="padding:0 4px 0 12px" valign="middle">
+            <p style="font-size:18px;font-weight:800;color:#2b2d45;margin:0 0 6px;line-height:1.2">Pánské košile Willsoor</p>
+            <p style="font-size:12px;color:#888;line-height:1.6;margin:0 0 14px">Česká kvalita. Doručení do 2 dnů. Výměna zdarma.</p>
+            <a href="#" style="display:inline-block;background:#424571;color:#fff;font-size:11px;font-weight:700;text-decoration:none;padding:10px 18px;border-radius:4px;letter-spacing:1px">VYBRAT →</a>
+          </td>
+        </tr></table></td></tr>
+        <tr><td bgcolor="#fff" style="padding:16px 40px"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>
+          <td width="33%" align="center" style="font-size:11px;color:#999;line-height:1.6">📦 Doručení<br>do 2 dnů</td>
+          <td width="33%" align="center" style="font-size:11px;color:#999;line-height:1.6">🔄 Výměna<br>zdarma</td>
+          <td width="33%" align="center" style="font-size:11px;color:#999;line-height:1.6">🎁 Dárkové<br>balení</td>
+        </tr></table></td></tr>
+        <tr><td bgcolor="#2b2d45" align="center" style="padding:20px 30px">
+          <p style="font-size:11px;color:#5555aa;margin:0;line-height:1.8">Willsoor s.r.o. · willsoor.cz<br><a href="#" style="color:#7777bb">Odhlásit odběr</a></p>
+        </td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ FACEBOOK ═══════════════════ -->
+<div id="panel-fb" class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Facebook — příspěvky</div>
+      <div class="panel-sub">Stránka: facebook.com/willsoorcz · Celkem 2 posty</div>
+    </div>
+    <span class="badge">9. 6. + 21. 6.</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto;">
+
+    <!-- POST 1 -->
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:12px">📅 Post 1 — Pondělí 9. 6. (spolu s Email 1)</div>
+      <div class="fb-card">
+        <div class="fb-top">
+          <div class="fb-avatar">W</div>
+          <div class="fb-meta">
+            <div class="fb-name">Willsoor.cz</div>
+            <div class="fb-time">Pondělí 9. 6. 2026 · 🌐</div>
+          </div>
+        </div>
+        <div class="fb-caption">
+          Svátek otců je za dva týdny 🎁<br><br>
+          Víš co darovat? Elegantní košile Willsoor padne každému tátovi — ať preferuje klasiku nebo moderní fit.<br><br>
+          Použij kód <span class="promo">TATA10</span>
+          a získej 10 % slevu na celou kolekci pánských košil. Platí do 21. 6. 2026.<br><br>
+          👉 willsoor.cz/panske-kosile/<br><br>
+          <span class="hashtag">#svátekotců #willsoor #pánskékošile #dárek #tatínek</span>
+        </div>
+        <img class="fb-img" src="https://raw.githubusercontent.com/adamku8/willsoor-fb-github/main/posts/tatinek-2026/01_terasa_cafe.png" alt="FB Post 1"/>
+        <div class="fb-actions">
+          <div class="fb-action">👍 Líbí se mi</div>
+          <div class="fb-action">💬 Komentovat</div>
+          <div class="fb-action">↗️ Sdílet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST 2 -->
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:12px">📅 Post 2 — Neděle 21. 6. (Den svátku — urgency)</div>
+      <div class="fb-card">
+        <div class="fb-top">
+          <div class="fb-avatar">W</div>
+          <div class="fb-meta">
+            <div class="fb-name">Willsoor.cz</div>
+            <div class="fb-time">Neděle 21. 6. 2026 · 🌐</div>
+          </div>
+        </div>
+        <div class="fb-caption">
+          Dnes je Svátek otců! 🎉 Ještě stihneš tátu překvapit.<br><br>
+          Dnes je <strong>poslední den</strong> platnosti kódu <span class="promo">TATA10</span>
+          — 10 % sleva na pánské košile Willsoor. Objednávky vyřizujeme i o víkendu.<br><br>
+          👉 willsoor.cz/panske-kosile/<br><br>
+          <span class="hashtag">#svátekotců #willsoor #tatíneknejlepší #poslednísance</span>
+        </div>
+        <img class="fb-img" src="https://raw.githubusercontent.com/adamku8/willsoor-fb-github/main/posts/tatinek-2026/02_zahrada_rodina.png" alt="FB Post 2"/>
+        <div class="fb-actions">
+          <div class="fb-action">👍 Líbí se mi</div>
+          <div class="fb-action">💬 Komentovat</div>
+          <div class="fb-action">↗️ Sdílet</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ AKČNÍ LIST ═══════════════════ -->
+<div id="panel-akcni" class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">✅ Akční list — Jak spustit kampaň</div>
+      <div class="panel-sub">Přesné kroky pro admin webu, Ecomail a Facebook · Kampaň: 9. 6. – 21. 6. 2026</div>
+    </div>
+    <span class="badge">TATA10 · 3 kanály</span>
+  </div>
+
+  <!-- Captions for copy-paste -->
+  <div class="caption-box">
+    <h3>📋 Texty k překopírování</h3>
+    <div class="caption-row">
+      <div class="caption-item">
+        <div class="ci-label">Slevový kód</div>
+        <p class="code">TATA10</p>
+        <p style="font-size:12px;color:#888;margin-top:6px">10 % slevy na pánské košile · platí 9. 6. – 21. 6. 2026</p>
+      </div>
+      <div class="caption-item">
+        <div class="ci-label">Email 1 předmět</div>
+        <p>Co táta opravdu chce 👔<br><span style="font-size:11px;color:#999">Preheader: Košile, která mu bude sedět celý rok.</span></p>
+      </div>
+      <div class="caption-item">
+        <div class="ci-label">Email 2 předmět</div>
+        <p>⏰ Ještě 2 dny — dárek pro tátu máš ✓<br><span style="font-size:11px;color:#999">Preheader: Objednávky do pátku doručíme včas.</span></p>
+      </div>
+      <div class="caption-item">
+        <div class="ci-label">FB caption (Post 1)</div>
+        <p>Svátek otců je za dva týdny 🎁 Elegantní košile Willsoor padne každému tátovi. Kód <strong>TATA10</strong> = 10 % slevy. Platí do 21. 6. 👉 willsoor.cz/panske-kosile/</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-grid">
+
+    <!-- WEB -->
+    <div class="action-col">
+      <div class="action-col-header web">🌐 Admin webu</div>
+
+      <div class="action-item">
+        <div class="action-num web">1</div>
+        <div class="action-text">
+          <strong>Aktivovat slevový kód TATA10</strong>
+          Admin → Slevové kódy → Nový kód<br>
+          <code>Kód: TATA10</code><br>
+          <code>Sleva: 10 %</code><br>
+          <code>Kategorie: Pánské košile</code><br>
+          <code>Platnost: 9. 6. – 21. 6. 2026</code>
+          <span class="hint">Zkontroluj, že kód funguje na pokladně před odesláním emailu.</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num web">2</div>
+        <div class="action-text">
+          <strong>Nahrát banner do adminu</strong>
+          Admin → Bannery / Grafika → Nový banner<br>
+          Soubor: <code>03_nabrezi_city.png</code><br>
+          Odkaz na: <code>/panske-kosile/</code>
+          <span class="hint">Umísti na výpis kategorie /panske-kosile/ jako header banner.</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num web">3</div>
+        <div class="action-text">
+          <strong>Nastavit platnost banneru</strong>
+          Zobrazovat od: <code>9. 6. 2026</code><br>
+          Zobrazovat do: <code>21. 6. 2026</code>
+          <span class="hint">Pokud admin neumí datum, odeber banner ručně 22. 6. ráno.</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num web">4</div>
+        <div class="action-text">
+          <strong>Zkontrolovat homepage</strong>
+          Ověř, zda je banner viditelný na mobilu i desktopu. Kliknutí musí vést na <code>/panske-kosile/</code>.
+        </div>
+      </div>
+    </div>
+
+    <!-- ECOMAIL -->
+    <div class="action-col">
+      <div class="action-col-header email">📧 Ecomail</div>
+
+      <div class="action-item">
+        <div class="action-num email">1</div>
+        <div class="action-text">
+          <strong>Kampaň Email 1 — vytvořit</strong>
+          Ecomail → Kampaně → Nová kampaň<br>
+          Název: <code>Svátek otců 2026 — Email 1</code><br>
+          Od: <code>Willsoor &lt;info@willsoor.cz&gt;</code><br>
+          Předmět: <code>Co táta opravdu chce 👔</code>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num email">2</div>
+        <div class="action-text">
+          <strong>Vložit HTML kód Email 1</strong>
+          Editor → Zvolit HTML šablonu → vložit kód z Notion sekce <em>💾 HTML kódy</em>
+          <span class="hint">Hero obrázek = 03_nabrezi_city.png (GitHub URL v sekci Bannery).</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num email">3</div>
+        <div class="action-text">
+          <strong>Naplánovat odeslání Email 1</strong>
+          Datum: <code>Pondělí 9. 6. 2026</code><br>
+          Čas: <code>9:00 CET</code><br>
+          Příjemci: celá DB (~5 300)
+          <span class="hint">Zkontroluj proměnnou {$unsubscribeUrl} ve footeru.</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num email">4</div>
+        <div class="action-text">
+          <strong>Kampaň Email 2 — vytvořit</strong>
+          Stejný postup. Předmět: <code>⏰ Ještě 2 dny — dárek pro tátu máš ✓</code><br>
+          Hero: <code>02_zahrada_rodina.png</code><br>
+          Datum: <code>Čtvrtek 19. 6. 2026, 9:00</code>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num email">5</div>
+        <div class="action-text">
+          <strong>Poslat testovací email</strong>
+          Oba emaily otestuj na <code>adam@creactive.cz</code> nebo firemní adresu. Zkontroluj zobrazení na mobilu.
+        </div>
+      </div>
+    </div>
+
+    <!-- FACEBOOK -->
+    <div class="action-col">
+      <div class="action-col-header fb">📘 Facebook</div>
+
+      <div class="action-item">
+        <div class="action-num fb">1</div>
+        <div class="action-text">
+          <strong>Post 1 — naplánovat na 9. 6.</strong>
+          Správce reklam / Meta Business → Stránka willsoorcz → Naplánovat příspěvek<br>
+          Datum: <code>Pondělí 9. 6. 2026, 9:30</code>
+          <span class="hint">Půl hodiny po odeslání emailu = vyšší organický dosah.</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num fb">2</div>
+        <div class="action-text">
+          <strong>Přiložit fotku Post 1</strong>
+          Soubor: <code>01_terasa_cafe.png</code><br>
+          (Praha café, muž s espressem, natural light)
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num fb">3</div>
+        <div class="action-text">
+          <strong>Caption Post 1</strong>
+          Viz záložka <em>Facebook</em> nebo tab „Texty k překopírování" výše.
+          <span class="hint">Hashtags: #svátekotců #willsoor #pánskékošile #dárek #tatínek</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num fb">4</div>
+        <div class="action-text">
+          <strong>Post 2 — naplánovat na 21. 6.</strong>
+          Datum: <code>Neděle 21. 6. 2026, 9:00</code><br>
+          Fotka: <code>02_zahrada_rodina.png</code>
+          <span class="hint">Urgency caption — poslední den kódu TATA10.</span>
+        </div>
+      </div>
+
+      <div class="action-item">
+        <div class="action-num fb">5</div>
+        <div class="action-text">
+          <strong>Volitelně: FB reklama</strong>
+          Boost Post 1 s cílením: muži/ženy 25–55, ČR, zájmy: móda, dárky, košile.<br>
+          Budget: 300–500 Kč/den · 9.–18. 6.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+
+</body>
+</html>
