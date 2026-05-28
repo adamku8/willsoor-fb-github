@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Svátek otců 2026 — 10 % sleva | Willsoor</title>
+  <meta name="description" content="Daruj tátuvi košili od Willsoor. Kód TATA10 = 10 % sleva na pánské košile. Platí do 21. 6. 2026." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #2b2d45;
+      --navy-mid: #424571;
+      --brown: #593b30;
+      --tan: #c8ac86;
+      --white: #ffffff;
+      --off-white: #f8f7f4;
+      --text: #333344;
+      --muted: #888;
+    }
+
+    body {
+      font-family: 'Segoe UI', Inter, Arial, sans-serif;
+      background: var(--off-white);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--navy);
+      color: #aab;
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 1.6px;
+      padding: 10px 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* ── LOGO ── */
+    .logo-bar {
+      background: #fff;
+      text-align: center;
+      padding: 20px 16px;
+      border-bottom: 1px solid #eee;
+    }
+    .logo-bar img { height: 36px; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      max-height: 560px;
+      overflow: hidden;
+      background: var(--navy);
+    }
+    .hero img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      max-height: 560px;
+      opacity: 0.82;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      background: linear-gradient(to bottom, rgba(43,45,69,0.15) 0%, rgba(43,45,69,0.55) 100%);
+    }
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 3px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.75);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .hero-h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      margin-bottom: 10px;
+    }
+    .hero-sub {
+      font-size: clamp(14px, 2vw, 18px);
+      color: rgba(255,255,255,0.88);
+      margin-bottom: 28px;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    .hero-btn {
+      display: inline-block;
+      background: #fff;
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+    /* ── CODE BOX ── */
+    .code-section {
+      background: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+    .code-eyebrow {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .code-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      background: #f5f4ff;
+      border: 2px dashed var(--navy-mid);
+      border-radius: 10px;
+      padding: 18px 32px;
+      margin-bottom: 12px;
+    }
+    .code-value {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(28px, 6vw, 42px);
+      font-weight: 700;
+      color: var(--navy-mid);
+      letter-spacing: 6px;
+    }
+    .copy-btn {
+      background: var(--navy-mid);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: var(--navy); }
+    .copy-btn.copied { background: #2e7d52; }
+    .code-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── COUNTDOWN ── */
+    .countdown-section {
+      background: var(--navy);
+      padding: 32px 20px;
+      text-align: center;
+      color: #fff;
+    }
+    .countdown-label {
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 18px;
+    }
+    .countdown-grid {
+      display: inline-flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cd-unit {
+      text-align: center;
+      min-width: 70px;
+    }
+    .cd-num {
+      display: block;
+      font-size: clamp(36px, 8vw, 56px);
+      font-weight: 800;
+      line-height: 1;
+      color: #fff;
+    }
+    .cd-label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+    }
+    .cd-sep {
+      font-size: 40px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.25);
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+    .countdown-expired {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── PRODUCTS ── */
+    .products-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 52px 20px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(43,45,69,0.07);
+      text-decoration: none;
+      color: inherit;
+      transition: transform .2s, box-shadow .2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(43,45,69,0.13); }
+    .product-card img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+    }
+    .product-info { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+    .product-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .product-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; flex: 1; }
+    .product-cta {
+      display: inline-block;
+      text-align: center;
+      background: var(--navy-mid);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 10px 0;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+
+    /* ── BENEFITS ── */
+    .benefits-section {
+      background: #fff;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      padding: 28px 20px;
+    }
+    .benefits-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .benefit-icon { font-size: 22px; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: var(--brown);
+      text-align: center;
+      padding: 48px 20px;
+      color: #fff;
+    }
+    .cta-banner h2 {
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .cta-banner p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 28px;
+    }
+    .cta-banner a {
+      display: inline-block;
+      background: #fff;
+      color: var(--brown);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 15px 36px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: transform .15s;
+    }
+    .cta-banner a:hover { transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      text-align: center;
+      padding: 28px 20px;
+      color: rgba(255,255,255,0.35);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+    footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+    footer a:hover { color: rgba(255,255,255,0.7); }
+
+    @media (max-width: 480px) {
+      .code-box { flex-direction: column; padding: 18px 24px; }
+      .cd-sep { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">Svátek otců &nbsp;·&nbsp; Neděle 21. června 2026</div>
+
+<!-- LOGO -->
+<div class="logo-bar">
+  <a href="https://www.willsoor.cz/" target="_blank">
+    <img src="https://www.willsoor.cz/images/logotype.png" alt="Willsoor" />
+  </a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <img
+    src="https://raw.githubusercontent.com/adamku8/willsoor-fb-github/main/posts/tatinek-2026/03_nabrezi_city.png"
+    alt="Pánské košile Willsoor — Svátek otců 2026"
+    loading="eager"
+  />
+  <div class="hero-overlay">
+    <p class="hero-tag">Svátek otců 2026</p>
+    <h1 class="hero-h1">Dárek, který sedí<br>jako šitý</h1>
+    <p class="hero-sub">Elegantní pánské košile Willsoor — daruj styl</p>
+    <a href="https://www.willsoor.cz/panske-kosile/" target="_blank" class="hero-btn">
+      Prohlédnout kolekci
+    </a>
+  </div>
+</section>
+
+<!-- CODE BOX -->
+<section class="code-section">
+  <p class="code-eyebrow">Použij při objednávce slevový kód</p>
+  <div class="code-box">
+    <span class="code-value" id="codeValue">TATA10</span>
+    <button class="copy-btn" id="copyBtn" onclick="copyCode()">Kopírovat</button>
+  </div>
+  <p class="code-note">10 % sleva na pánské košile &nbsp;·&nbsp; Platí do 21. 6. 2026</p>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="countdown-section">
+  <p class="countdown-label">Zbývá do konce akce</p>
+  <div class="countdown-grid" id="countdown">
+    <div class="cd-unit"><span class="cd-num" id="cd-days">--</span><span class="cd-label">dní</span></div>
+    <span class="cd-sep">:</span>
+    <div class="cd-unit"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">hodin</span></div>
+    <span class="cd-sep">:</span>
+    <div class="cd-unit"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">minut</span></div>
+    <span class="cd-sep">:</span>
+    <div class="cd-unit"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">sekund</span></div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products-section">
+  <h2 class="section-title">Hledáš inspiraci?</h2>
+  <p class="section-sub">Klasické pánské košile vhodné jako dárek i pro každodenní nošení</p>
+  <div class="products-grid">
+
+    <a class="product-card" href="https://www.willsoor.cz/p/19848-panska-kosile-svetle-modra-klasickeho-strihu-s-hladkym-vzorem-19848/" target="_blank">
+      <img src="https://www.willsoor.cz/images/produkty/thumb2/1984843988-43989-43990-43991_img_8713_1.jpg" alt="Světle modrá košile — klasický střih" loading="lazy" />
+      <div class="product-info">
+        <p class="product-name">Světle modrá</p>
+        <p class="product-desc">Klasický střih · 100% bavlna · Kent límeček</p>
+        <span class="product-cta">Zobrazit →</span>
+      </div>
+    </a>
+
+    <a class="product-card" href="https://www.willsoor.cz/panske-kosile/" target="_blank">
+      <img src="https://www.willsoor.cz/images/produkty/thumb2/1912043252-43254_dsc04846_1.jpg" alt="Tmavě modrá košile s puntíkem" loading="lazy" />
+      <div class="product-info">
+        <p class="product-name">Tmavě modrá s puntíkem</p>
+        <p class="product-desc">Slim fit · Jemný vzor · Dlouhý rukáv</p>
+        <span class="product-cta">Zobrazit →</span>
+      </div>
+    </a>
+
+    <a class="product-card" href="https://www.willsoor.cz/panske-kosile/" target="_blank">
+      <img src="https://www.willsoor.cz/images/produkty/thumb2/1684843057-43058-43059_2148_1.jpg" alt="Bílá košile s proužky" loading="lazy" />
+      <div class="product-info">
+        <p class="product-name">Bílá s proužky</p>
+        <p class="product-desc">Elegantní styl · Klasický střih · Všestranná</p>
+        <span class="product-cta">Zobrazit →</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits-section">
+  <div class="benefits-grid">
+    <div class="benefit"><span class="benefit-icon">🚚</span><span>Doprava zdarma od 1 500 Kč</span></div>
+    <div class="benefit"><span class="benefit-icon">🔄</span><span>Výměna zdarma do 30 dnů</span></div>
+    <div class="benefit"><span class="benefit-icon">🎁</span><span>Dárkové balení dostupné</span></div>
+    <div class="benefit"><span class="benefit-icon">🏆</span><span>Česká kvalita od roku 2007</span></div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <h2>Nezapomeň na kód TATA10</h2>
+  <p>10 % sleva na celou kolekci pánských košil · Platí do neděle 21. 6. 2026</p>
+  <a href="https://www.willsoor.cz/panske-kosile/" target="_blank">
+    Nakoupit na willsoor.cz →
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    <a href="https://www.willsoor.cz/" target="_blank">willsoor.cz</a>
+    &nbsp;·&nbsp;
+    Willsoor s.r.o.
+    &nbsp;·&nbsp;
+    Velký výběr pánských a dámských košil
+  </p>
+  <p style="margin-top:6px;">
+    <a href="https://www.willsoor.cz/panske-kosile/" target="_blank">Pánské košile</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.willsoor.cz/panske/" target="_blank">Pánská kolekce</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.willsoor.cz/damske/" target="_blank">Dámská kolekce</a>
+  </p>
+</footer>
+
+<script>
+  // ── COPY CODE ──
+  function copyCode() {
+    const btn = document.getElementById('copyBtn');
+    navigator.clipboard.writeText('TATA10').then(() => {
+      btn.textContent = '✓ Zkopírováno';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Kopírovat';
+        btn.classList.remove('copied');
+      }, 2500);
+    }).catch(() => {
+      // fallback
+      const el = document.createElement('textarea');
+      el.value = 'TATA10';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      btn.textContent = '✓ Zkopírováno';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Kopírovat';
+        btn.classList.remove('copied');
+      }, 2500);
+    });
+  }
+
+  // ── COUNTDOWN ──
+  const deadline = new Date('2026-06-21T23:59:59');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    const now = new Date();
+    const diff = deadline - now;
+
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML =
+        '<p class="countdown-expired">Akce skončila</p>';
+      return;
+    }
+
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000)  / 60000);
+    const secs  = Math.floor((diff % 60000)    / 1000);
+
+    document.getElementById('cd-days').textContent  = days;
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent  = pad(mins);
+    document.getElementById('cd-secs').textContent  = pad(secs);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>
+
+</body>
+</html>
